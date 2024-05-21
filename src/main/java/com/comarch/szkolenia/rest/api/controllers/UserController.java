@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(path = "/user")
 public class UserController {
 
     @Autowired
     private IUserRepository userRepository;
 
-    @GetMapping("/user")
+    @GetMapping("")
     public ResponseEntity getAllOrByLogin(@RequestParam(name = "login", required = false) String login) {
         if(login == null) {
             return ResponseEntity.ok(this.userRepository.getAll());
@@ -29,7 +30,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable("id") int id) {
         Optional<User> userBox = this.userRepository.getById(id);
         if(userBox.isPresent()) {
@@ -38,7 +39,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<User> update(@RequestBody User user, @PathVariable("id") int id) {
         user.setId(id);
         Optional<User> userBox = this.userRepository.update(user);
@@ -48,12 +49,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") int id) {
         this.userRepository.delete(id);
     }
 
-    @PostMapping("/user")
+    @PostMapping("")
     public ResponseEntity<User> create(@RequestBody User user) {
         Optional<User> userBox = this.userRepository.create(user);
         if(userBox.isPresent()) {
