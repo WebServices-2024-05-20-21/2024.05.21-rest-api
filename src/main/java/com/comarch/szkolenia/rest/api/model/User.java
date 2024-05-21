@@ -1,6 +1,8 @@
 package com.comarch.szkolenia.rest.api.model;
 
-public class User {
+import org.springframework.hateoas.RepresentationModel;
+
+public class User extends RepresentationModel<User> {
     private int id;
     private String login;
     private String password;
