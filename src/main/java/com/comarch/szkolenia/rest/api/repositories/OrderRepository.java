@@ -1,7 +1,6 @@
 package com.comarch.szkolenia.rest.api.repositories;
 
 import com.comarch.szkolenia.rest.api.model.Order;
-import com.comarch.szkolenia.rest.api.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -33,21 +32,21 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public List<Order> getAll() {
-        return null;
+        return this.orders;
     }
 
     @Override
-    public List<Order> getByPriceFrom(double from) {
-        return null;
+    public List<Order> getByPriceFrom(final double from) {
+        return this.orders.stream().filter(o -> o.getSum() > from).toList();
     }
 
     @Override
-    public Optional<Order> getById(int id) {
-        return Optional.empty();
+    public Optional<Order> getById(final int id) {
+        return this.orders.stream().filter(o -> o.getId() == id).findFirst();
     }
 
     @Override
-    public void delete(int id) {
-
+    public void delete(final int id) {
+        this.orders.removeIf(o -> o.getId() == id);
     }
 }

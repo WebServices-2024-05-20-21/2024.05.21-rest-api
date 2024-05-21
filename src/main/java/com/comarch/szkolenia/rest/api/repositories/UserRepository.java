@@ -20,31 +20,57 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public List<User> getAll() {
-        return null;
+        return this.users;
     }
 
     @Override
-    public Optional<User> getById(int id) {
-        return Optional.empty();
+    public Optional<User> getById(final int id) {
+        return this.users.stream().filter(u -> u.getId() == id).findFirst();
     }
 
     @Override
-    public Optional<User> getByLogin(String login) {
-        return Optional.empty();
+    public Optional<User> getByLogin(final String login) {
+        return this.users.stream().filter(u -> u.getLogin().equals(login)).findFirst();
     }
 
     @Override
-    public Optional<User> update(User user) {
-        return Optional.empty();
+    public Optional<User> update(final User user) {
+        return this.users.stream().filter(u -> u.getId() == user.getId())
+                .peek(u -> {
+                    u.setLogin(user.getLogin());
+                    u.setPassword(user.getPassword());
+                    u.setName(user.getName());
+                    u.setSurname(user.getSurname());
+                }).findFirst();
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(final int id) {
+        /*Iterator<User> iterator = this.users.iterator();
+        while(iterator.hasNext()) {
+            User u = iterator.next();
+            if(u.getId() == id) {
+                iterator.remove();
+            }
+        }*/
 
+        this.users.removeIf(u -> u.getId() == id);
     }
 
     @Override
     public Optional<User> create(User user) {
-        return Optional.empty();
+        Optional<User> userWithLogin= this.users.stream()
+                .filter(u -> u.getLogin().equals(user.getLogin())).findFirst();
+        if(userWithLogin.isPresent()) {
+            return Optional.empty();
+        }
+        Optional<Integer> maxIdBox = this.users.stream().map(u -> u.getId()).max((a,b) -> a - b);
+        int newId = 1;
+        if(maxIdBox.isPresent()) {
+            newId = maxIdBox.get() + 1;
+        }
+        user.setId(newId);
+        this.users.add(user);
+        return Optional.of(user);
     }
 }
