@@ -13,11 +13,10 @@ import java.util.Optional;
 public class OrderRepository implements IOrderRepository {
 
     private final List<Order> orders = new ArrayList<>();
+    private final IUserRepository userRepository;
 
-    @Autowired
-    private IUserRepository userRepository;
-
-    public OrderRepository() {
+    public OrderRepository(IUserRepository userRepository) {
+        this.userRepository = userRepository;
         this.orders.add(new Order(1, LocalDateTime.now(), 400.99,
                 Order.State.NEW, this.userRepository.getById(1).get()));
         this.orders.add(new Order(2, LocalDateTime.now(), 200.99,
